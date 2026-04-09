@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sharehub</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/api.js" defer></script>
+    <script src="js/authentication.js" defer></script>
+    <script src="js/activities.js" defer></script>
+    <script src="js/schedules.js" defer></script>
+    <script src="js/participants.js" defer></script>
+    <script src="js/app.js" defer></script>
+</head>
+<body>
+    <div class="login-section" style="display: none;">
+        <div class="login-box">
+            <h1>ShareHub</h1>
+            <h2>Enter your info to sign in</h2>
+            <p>or get started with a new account.</p>
+            <input type="text" id="login-name" placeholder="Username">
+            <input type="password" id="login-password" placeholder="Password">
+            <button id="btn-login">Continue ></button>
+            <button id="go-to-register">Register ></button>
+        </div>
+    </div>
+    <div class="register-section" style="display: none;">
+        <div class="register-box">
+            <h1>ShareHub</h1>
+            <h2>Register</h2>
+            <p>Password must be a combination of at least 8 characters including numbers, uppercase and lowercase letters.</p>
+            <p><b>Note:</b> Your password must be between 8 and 23 characters.</p>
+            <p> Your password cannot contain your username.</p>
+            <p><b>Note:</b> You will login with your username and passoword</p>
+            <div>
+                <p>Username</p>
+                <input type="text" id="register-user-name" placeholder="UserName">
+            </div>
+            <div>
+                <p>Password</p>
+                <input type="password" id="register-password" placeholder="Password">
+            </div>
+            <div>
+                <p>E-mail Address</p>
+                <input type="email" id="register-email" placeholder="Email">
+            </div>            
+            <button id="btn-register">Continue</button>
+        </div>
+    </div>
+    <div class="main-section" style="display: none;">
+        <div class="activity-cards">
+            <!-- Activity cards displayed here -->
+        </div>
+    </div>
+    <div class="menu-box" style="display: none;">
+        <input type="text" id="search-bar" placeholder="Search">
+        <button id="create-activity">Create Activity</button>
+        <button id="settings">Settings</button>
+    </div>
+
+<!-- Modals -->
+
+    <div class="modal-create-activity" style="display: none;">
+        <div class="modal-box-activity">
+            <div class="modal-header">
+                <h2>Create new activity</h2>
+                <button id="btn-cancel-activity">X</button>
+            </div>
+            <h2>Activity Name</h2>
+            <input type="text" id="activity-name" placeholder="Activity Name">
+            <h2>Description (Optional)</h2>
+            <textarea id="activity-description" placeholder="Description"></textarea>
+            <div class="modal-footer">
+                <button id="btn-confirm-activity">Create</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal-expanded-activity" style="display: none;">
+        <div class="modal-box-expanded">
+            <div class="expanded-header">
+                <h2></h2> <!-- Activity name -->
+                <button id="btn-cancel-activity-expanded">X</button>
+            </div>
+            <p></p> <!-- Activity Description -->
+            <div class="expanded-schedule-list">
+                <!-- each activity will have a delete button connected to it -->
+            </div>
+            <div class="expanded-footer">
+                <button class="btn-create-schedule">Create Schedule</button>
+                <button class="btn-delete-activity">Delete Activity</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-expanded-schedule" style="display: none;">
+        <div class="modal-box-expanded-schedule">
+            <div class="schedule-modal-header">
+                <button id="btn-close-schedule">X</button>
+            </div>
+            <p id="schedule-detail-description"></p> <!-- Schedule Description -->
+        </div>
+    </div>
+
+    <div class="modal-create-schedule" style="display: none;">
+        <div class="modal-box-schedule">
+            <input type="datetime-local" id="schedule-time">
+            <input type="text" id="schedule-description" placeholder="Description - Optional">
+            <button class="btn-confirm-schedule">Create</button>
+            <button class="btn-cancel-schedule">Cancel</button>
+        </div>
+    </div>
+
+    <div class="modal-user-settings" style="display: none;">
+        <div class="modal-box-settings">
+            <div class="settings-modal">
+                <button id="btn-close-settings">X</button>
+            </div>
+            <h2 id="settings-user"></h2> <!-- User name -->
+            <h2 id="settings-email"></h2> <!-- Email -->
+            <button class="btn-delete-acc">Delete Account</button>
+            <button class="btn-logout-acc">Logout</button>
+        </div>
+    </div>
+
+<!-- Error alert -->
+
+    <div id="custom-alert" style="display: none;">
+        <div class="alert-box">
+            <span class="alert-icon">✖️</span>
+            <h2>Ops...</h2>
+            <p></p>
+            <button id="close-btn" type="button">OK</button>
+        </div>
+    </div>       
+</body>
+</html>

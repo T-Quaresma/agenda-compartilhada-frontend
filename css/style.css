@@ -1,0 +1,597 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #FAF9F6;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    color: #363636
+}
+
+/* Login page */
+
+.login-section {
+   background-color: #FAF9F6; 
+   min-height: 100vh;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+
+.login-box {
+    background-color: #FAF9F6;
+    border-radius: 18px;
+    padding: 40px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.login-box input {
+    background-color: #dddcd7;
+    border: none;
+    border-radius: 5px;
+    box-sizing: border-box;
+    text-align: center;
+    font-weight: bold;
+    color: #5a5a5a;
+    font-size: 12px;
+    padding: 0.5em 1rem;
+    width: 100%;
+}
+
+.login-box input:focus {
+    outline: 2px solid #666666
+}
+
+.login-box button {
+    width: 100%;
+    background-color: #ece9e1;
+    border: none;
+    padding: 0.5em 1rem;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-weight: bold;
+    font-size: 17px;
+    text-align: center;
+}
+
+.login-box p {
+    margin-top: -12px;
+}
+
+
+/* Register page */
+
+.register-section {
+    background-color: #FAF9F6;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 40px;
+}
+
+.register-box {
+    background-color: #FAF9F6;
+    width: 600px;
+    border-radius: 18px;
+    padding: 40px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+.register-box h1 {
+    margin-bottom: 20px;
+}
+
+.register-box h2 {
+    margin-bottom: 10px;
+}
+
+.register-box p {
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.register-box div {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    gap: 10px;
+}
+
+.register-box div p {
+    width: 120px;
+    text-align: right;
+    font-weight: bold;
+}
+
+.register-box div input {
+    flex: 1;
+    padding: 6px;
+    border: 1px solid #d2d2d7;
+    border-radius: 5px;
+}
+
+/* Main page */
+
+
+.main-section {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: #f5f5f7;
+    padding-bottom: 80px; 
+}
+
+/* Menu */
+
+.menu-box {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-top: 1px solid #d2d2d7;
+    padding: 12px 30px;
+    align-items: center;
+    gap: 20px;
+    z-index: 100;
+}
+
+#search-bar {
+    flex: 1;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 20px;
+    background: #e8e8ed;
+    font-size: 14px;
+    outline: none;
+}
+
+.menu-box button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 22px;
+    color: #6e6e73;
+    padding: 5px;
+}
+
+.menu-box button:hover {
+    color: #0071e3;
+}
+
+/* Modals */
+
+/* Create Activity */
+
+
+.modal-create-activity {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+#btn-cancel-activity {
+    background: transparent;
+    color: #6e6e73;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    align-self: flex-end;
+}
+
+.modal-box-activity {
+    background: white;
+    border-radius: 18px;
+    padding: 30px;
+    width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#activity-description {
+    width: 100%;
+    height: 120px;
+    border-radius: 8px;
+    border: 1px solid #d2d2d7;
+    padding: 10px;
+    resize: none;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* Activity Extended */
+
+.modal-expanded-activity {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+#btn-cancel-activity-expanded {
+    background: transparent;
+    color: #6e6e73;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    align-self: flex-end;
+}
+
+.modal-box-expanded {
+    background: white;
+    border-radius: 18px;
+    padding: 30px;
+    width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.expanded-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.expanded-schedule-list {
+    background: #f5f5f7;
+    border-radius: 12px;
+    padding: 15px;
+    min-height: 150px;
+}
+
+.delete-schedule {
+   background: transparent;
+    color: #6e6e73;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    align-self: flex-end; 
+}
+
+.expanded-footer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.btn-delete-activity {
+    background: #ff3b30;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+}
+
+.btn-create-schedule {
+    background: #0071e3;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+}
+
+.modal-create-user-name {
+    background-color: rgba(rgb(116, 116, 116), rgb(92, 92, 92), rgb(88, 88, 88), 0.5);
+    filter: blur(8px);
+    -webkit-filter: blur(8px);
+}
+
+/* Shedule creation */
+
+.modal-create-schedule {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-box-schedule {
+    background: white;
+    border-radius: 18px;
+    padding: 30px;
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#schedule-time {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #d2d2d7;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+#schedule-description {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #d2d2d7;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.btn-confirm-schedule {
+    background: #0071e3;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 14px;
+    cursor: pointer;
+    align-self: flex-end;
+}
+
+.btn-cancel-schedule {
+    background: transparent;
+    color: #6e6e73;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    align-self: flex-end;
+}
+
+/* Schedule expanded */
+
+.modal-expanded-schedule {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-box-expanded-schedule {
+    background: white;
+    border-radius: 18px;
+    padding: 25px;
+    width: 350px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.schedule-modal-header {
+    display: flex;
+    justify-content: flex-end;
+}
+
+#btn-close-schedule {
+    background: transparent;
+    border: none;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+/* User settings */
+
+.modal-user-settings {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.settings-modal {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px 15px;
+    border-bottom: 1px solid #d2d2d7;
+}
+
+#settings-user {
+    font-size: 16px;
+    font-weight: normal;
+    color: #1d1d1f;
+    padding: 15px 20px 5px 20px;
+    background: white;
+}
+
+#settings-email {
+    font-size: 13px;
+    font-weight: normal;
+    color: #6e6e73;
+    padding: 5px 20px 15px 20px;
+    background: white;
+    border-bottom: 1px solid #d2d2d7;
+}
+
+.modal-box-settings {
+    background: white;
+    border-radius: 18px;
+    width: 350px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+#btn-close-settings {
+    background: transparent;
+    border: none;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.btn-logout-acc {
+    padding: 15px 20px;
+    font-size: 15px;
+    color: #0071e3;
+    background: white;
+    border: none;
+    border-bottom: 1px solid #d2d2d7;
+    text-align: left;
+    cursor: pointer;
+    width: 100%;
+}
+
+.btn-delete-acc {
+    padding: 15px 20px;
+    font-size: 15px;
+    color: #ff3b30;
+    background: white;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    width: 100%;
+}
+
+.btn-logout-acc:hover {
+    background: #f5f5f7;
+}
+
+.btn-delete-acc:hover {
+    background: #f5f5f7;
+}
+
+/* Card display */
+
+.activity-card {
+    background: white;
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    cursor: pointer;
+    width: 220px;
+    height: 320px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card-schedule-item {
+    font-size: 12px;
+    color: #6e6e73;
+    padding: 4px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.activity-cards {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 220px));
+    gap: 20px;
+    padding: 30px;
+    align-content: start;
+}
+
+.no-activities-msg {
+    text-align: center;
+}
+
+.activity-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+}
+
+.activity-card-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #1d1d1f;
+    border-bottom: 1px solid #d2d2d7;
+    padding-bottom: 10px;
+}
+
+.activity-card-schedules {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.schedule-item {
+    font-size: 13px;
+    color: #6e6e73;
+    padding: 5px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+/* Custom Alert */
+
+#custom-alert {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+.alert-box {
+  background: #afafaf;
+  color: white;
+  border-radius: 12px;
+  padding: 2rem 2.5rem;
+  text-align: center;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.25);
+  min-width: 220px;
+}
+.alert-icon {
+  font-size: 3rem;
+  color: #ff4c4c;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+#alert-ok {
+  margin-top: 1.5rem;
+  background: #7c6fff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5em 2em;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
