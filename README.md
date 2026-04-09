@@ -2,78 +2,61 @@
 
 ShareHub - Frontend
 
-Repositório criado para todo desenvolvimento do frontend do MVP - FullStack Básico.
+Repository created for the full development of the Frontend MVP - Basic FullStack.
 
-Interface web para gerenciamento de agendas compartilhadas entre usuários. Permite visualizar atividades, adicionar agendamentos e interagir com outros usuários através de uma SPA (Single Page Application).
+Web interface for managing shared agendas between users. Allows viewing activities, adding appointments and interacting with other users through a SPA (Single Page Application).
 
----
+I------------------------------------------------------------------------------------------I
 
-Tecnologias
+Technologies
 
 HTML5
 CSS3
-JavaScript (Vanilla)
+JavaScript
 
----
+I------------------------------------------------------------------------------------------I
 
-Pré-requisitos
+Prerequisites
 
-O backend do ShareHub deve estar rodando antes de abrir o frontend.
-Repositório do backend: https://github.com/T-Quaresma/agenda-compartilhada-backend
+The ShareHub backend must be running before opening the frontend.
+Backend repository: https://github.com/T-Quaresma/agenda-compartilhada-backend
 
----
+I------------------------------------------------------------------------------------------I
 
-Instalação e Execução
+Installation and Execution
 
-1. Clone o repositório:
+1. Clone the repository:
 git clone https://github.com/T-Quaresma/agenda-compartilhada-frontend
 cd agenda-compartilhada-frontend
 
-2. Certifique-se que o backend está rodando:
+2. Make sure the backend is running:
 cd agenda-compartilhada-backend
 source venv/Scripts/activate
 py app.py
 
-3. Abra o frontend:
-Abra o arquivo index.html diretamente no navegador.
-Não é necessário nenhum servidor local, extensão ou configuração adicional.
+3. Open the frontend:
+Open the index.html file directly in the browser.
 
----
+I------------------------------------------------------------------------------------------I
 
-Funcionalidades
+Features
 
-Usuário
-- Cadastro de nova conta
-- Login com username
-- Visualização de dados da conta em Settings
+User
+- New account registration
+- Login with username
+- Account data view in Settings
 - Logout
-- Exclusão de conta
+- Account deletion
 
-Atividades
-- Criação de novas atividades
-- Visualização de todas as atividades em cards
-- Busca de atividades pelo nome
-- Exclusão de atividades
+Activities
+- Create new activities
+- View all activities in cards
+- Search activities by name
+- Delete activities
 
-Agendamentos
-- Criação de agendamentos vinculados a uma atividade
-- Visualização dos agendamentos dentro de cada card de atividade
-- Visualização da descrição de cada agendamento
-- Exclusão de agendamentos
+Schedules
+- Create schedules linked to an activity
+- View schedules within each activity card
+- View the description of each schedule
+- Delete schedules
 
----
-
-Estrutura do Projeto
-
-agenda-compartilhada-frontend/
-├── index.html
-├── css/
-│   └── style.css
-├── js/
-│   ├── api.js
-│   ├── authentication.js
-│   ├── activities.js
-│   ├── schedules.js
-│   ├── participants.js
-│   └── app.js
-└── README.md
