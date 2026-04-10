@@ -62,4 +62,8 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelector('.login-section').style.display = 'none'
         document.querySelector('.register-section').style.display = 'flex'
     }
+    document.querySelector('.btn-close-register').onclick = function() {
+        document.querySelector('.register-section').style.display = 'none'
+        document.querySelector('.login-section').style.display = 'flex'
+    }
 })
