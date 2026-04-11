@@ -18,7 +18,7 @@ I-------------------------------------------------------------------------------
 
 Prerequisites
 
-The ShareHub backend must be running before opening the frontend.
+The ShareHub backend should ideally be running for the access and register of the user before opening the frontend.
 Backend repository: https://github.com/T-Quaresma/agenda-compartilhada-backend
 
 I------------------------------------------------------------------------------------------I
