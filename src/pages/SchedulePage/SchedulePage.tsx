@@ -5,7 +5,7 @@ import { useState, useEffect } from "react"
 import { createSchedule, displaySchedule, deleteSchedule, editSchedule } from "../../services/agendamento"
 import ScheduleCard from "../../components/ScheduleCard/ScheduleCard"
 import { listGroups } from "../../services/grupo"
-import Modal from "../../components/modal/modal"
+import Modal from "../../components/Modal/Modal"
 import {Undo2} from "lucide-react"
 
 

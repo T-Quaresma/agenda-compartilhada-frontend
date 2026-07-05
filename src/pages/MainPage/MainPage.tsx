@@ -1,5 +1,5 @@
 import Header from "../../components/Header/Header"
-import Modal from "../../components/modal/modal"
+import Modal from "../../components/Modal/Modal"
 import BottomNav from "../../components/BottomNav/BottomNav"
 import { useState, useEffect } from "react"
 import { listActivities } from "../../services/atividade"
