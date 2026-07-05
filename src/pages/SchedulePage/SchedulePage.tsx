@@ -266,12 +266,12 @@ function SchedulePage() {
                         </div>
                         <div className="flex gap-3 justify-center">
                             <button title="Confirm Changes" onClick={handleEditSch}
-                                className="bg-[#9FD7F1] text-white font-bold px-8 py-2 rounded-full"
+                                className="bg-[#9FD7F1] text-white  px-8 py-2 rounded-full"
                             >
                                 Confirm
                             </button>
                             <button title="Cancel Changes" onClick={() => setIsEditing(false)}
-                                className="bg-[#FF6B6B] text-white font-bold px-8 py-2 rounded-full"
+                                className="bg-[#FF6B6B] text-white  px-8 py-2 rounded-full"
                             >
                                 Cancel
                             </button>

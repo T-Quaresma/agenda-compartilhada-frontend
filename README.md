@@ -1,73 +1,157 @@
-# React + TypeScript + Vite
+# agenda-compartilhada-frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+ShareHub - Frontend MVP 2
 
-Currently, two official plugins are available:
+Repository created for the full development of the Frontend MVP - Advanced Frontend Development.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Web interface for managing shared agendas between users. Allows creating and managing activity groups, activities and schedules through a SPA (Single Page Application) built with React and TypeScript.
 
-## React Compiler
+I------------------------------------------------------------------------------------------I
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Technologies
 
-## Expanding the ESLint configuration
+React
+TypeScript
+Vite
+React Router DOM
+Tailwind3 CSS
+Lucide React
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+I------------------------------------------------------------------------------------------I
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Prerequisites
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+Node.js installed on your machine.
+The ShareHub backend must be running before starting the frontend.
+Backend repository: https://github.com/T-Quaresma/agenda-compartilhada-backend
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Note: with the professor's authorization, this project uses the real backend from the previous MVP (FullStack Basico) instead of simulated data from a local JSON file.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+I------------------------------------------------------------------------------------------I
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Installation and Execution
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+1. Clone the repository:
+git clone https://github.com/T-Quaresma/agenda-compartilhada-frontend
+cd agenda-compartilhada-frontend
+2. Install dependencies:
+npm install
+3. Make sure the backend is running:
+cd agenda-compartilhada-backend
+source venv/Scripts/activate
+py app.py
+4. Start the frontend:
+npm run dev
+5. Open the browser and navigate to:
+http://localhost:5173
+
+I------------------------------------------------------------------------------------------I
+
+Features
+
+Activity Groups
+
+* Create new activity groups with custom avatar
+* View all groups in the bottom navigation bar
+* Select a group to filter activities
+* Edit group name and avatar
+* Delete groups with confirmation modal
+* Move activities between groups
+
+Activities
+
+* Create new activities linked to a group with custom avatar
+* View all activities in a responsive card grid
+* Search activities by name
+* Edit activity name, description and avatar
+* Delete activities with confirmation modal
+
+Schedules
+
+* Create schedules linked to an activity
+* Set start and end date, start and end time, location and frequency
+* View schedules within each activity
+* Edit all schedule details
+* Delete schedules with confirmation modal
+* Navigate directly to a schedule page by clicking on it
+
+Navigation
+
+* Bottom navigation bar with activity groups
+* Horizontal scroll when more than 8 groups are created
+* Return button on activity and schedule pages
+* 404 page for unknown routes
+
+Usability
+
+* Tooltips on all buttons explaining their action
+* Visual feedback after user actions (clicks, form submissions, loading states)
+* Conditional messages for empty or error states (e.g. "no items found")
+* Responsive layout, adapting to desktop and tablet screen sizes
+
+I------------------------------------------------------------------------------------------I
+
+Reusable Components
+
+Header - Displayed on all pages
+BottomNav - Displayed on all pages except 404, shows activity groups
+ScheduleCard - Used in ActivityPage (compact mode) and SchedulePage (full mode)
+Modal - Used for delete and edit confirmations across all pages
+AvatarPicker - Used for selecting avatars for groups and activities
+
+I------------------------------------------------------------------------------------------I
+
+Routing and Navigation Hooks
+
+Routing is handled with React Router DOM. The following hooks are used across the pages:
+
+* useNavigate - used for redirecting between pages (e.g. after creating, editing or deleting an item)
+* useParams - used to read route parameters, such as activity or schedule IDs, directly from the URL
+* useLocation - used to read the current URL/route state across components
+* useState / useEffect - used throughout the app to manage local component state and side effects (e.g. fetching data on mount)
+
+A dedicated 404 route (NotFoundPage) handles any unmatched/unknown URLs.
+
+I------------------------------------------------------------------------------------------I
+
+Project Structure
+
+src/
+components/   - Reusable components (Header, BottomNav, ScheduleCard, Modal, AvatarPicker)
+pages/        - Application pages (MainPage, ActivityPage, SchedulePage, SettingsPage, NotFoundPage)
+services/     - API communication functions (atividade, agendamento, grupo, api)
+assets/
+avatars/      - Avatar images (SVG format, licensed under CC BY 4.0)
+
+I------------------------------------------------------------------------------------------I
+
+How to Use
+
+1. Open the app — the Main Page shows the activity grid and the bottom navigation bar.
+2. Create a group — click "New Group" in the bottom bar, choose a name and avatar.
+3. Select a group — click a group card to filter activities by that group.
+4. Create an activity — click "New Activity", fill in the name, description and avatar. If a group is selected, the activity will be linked to it automatically.
+5. Open an activity — click any activity card to see its details and schedule list.
+6. Create a schedule — inside an activity page, click "Create Schedule" and fill in the details.
+7. Open a schedule — click any schedule card to see its full details, edit or delete it.
+8. Edit or delete — use the Edit and Delete buttons on activity and schedule pages. Deleting always requires confirmation.
+9. Move an activity to another group — click Edit on the activity and select a group from the "Move to Group" dropdown.
+10. Delete a group — click the trash icon on the group card in the bottom bar. This does not delete the activities inside it.
+
+I------------------------------------------------------------------------------------------I
+Roadmap - Planned for MVP 3
+
+The following features are part of the overall ShareHub project vision but are NOT implemented in this MVP 2 delivery. They are planned for MVP 3:
+
+* User account creation and authentication (login/password)
+* Sharing schedules/activities between users
+* Participants - references to users with whom activities/schedules are shared
+* Replace the current fixed avatar picker with the ability to upload custom images directly from the user's device, to be used instead of the predefined avatars
+
+I------------------------------------------------------------------------------------------I
+
+Credits
+
+Avatars: Material Design 3 Kit, licensed under CC BY 4.0
+https://creativecommons.org/licenses/by/4.0/
+

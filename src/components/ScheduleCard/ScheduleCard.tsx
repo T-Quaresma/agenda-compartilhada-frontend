@@ -129,7 +129,7 @@ function ScheduleCard({ nomeAtiv, nomeAgen, descAgen, data_inicio, data_fim, hor
                             <p className="text-[#5C7E8D] text-xs">Edit Schedule</p>
                             <button
                                 onClick={(e) => { e.stopPropagation(); onEditClick?.() }}
-                                className="bg-[#5ca6db] text-white font-bold px-6 py-1 rounded-full text-sm w-[100px]">
+                                className="bg-[#5ca6db] text-white px-6 py-1 rounded-full text-sm w-[100px]">
                                 Edit
                             </button>
                         </div>
@@ -138,7 +138,7 @@ function ScheduleCard({ nomeAtiv, nomeAgen, descAgen, data_inicio, data_fim, hor
                             <p className="text-[#5C7E8D] text-xs">Delete Schedule</p>
                             <button
                                 onClick={(e) => { e.stopPropagation(); onDeleteClick() }}
-                                className="bg-[#D22D39] text-white font-bold px-6 py-1 rounded-full text-sm w-[100px]">
+                                className="bg-[#D22D39] text-white px-6 py-1 rounded-full text-sm w-[100px]">
                                 Delete
                             </button>
                         </div>

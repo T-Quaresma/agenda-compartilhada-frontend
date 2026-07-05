@@ -59,6 +59,7 @@ function ActivityPage() {
             setName(activity?.nomeAtiv || '')
             setDescription(activity?.descAtiv || '')
             setSelectedAvatar(activity?.imagem || '')
+            setSelectedGroup(activity?.grupoId || null)
         }
     }, [isEditing])
 
