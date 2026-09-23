@@ -157,13 +157,13 @@ function SchedulePage() {
                     <div className="bg-[#E1EFF4] rounded-2xl p-8 w-full max-w-[600px] flex flex-col gap-4">
                         <h1 className="text-[#5C7E8D] font-bold text-2xl text-center">Create Schedule</h1>
                         <div className="flex flex-col gap-1">
-                            <p className="text-[#5C7E8D] font-medium text-sm">Schedule Name</p>
+                            <p className="text-[#5C7E8D] font-medium text-sm">Schedule Name*</p>
                             <input value={name} type="text" onChange={e => setName(e.target.value)}
                                 className="bg-white rounded-lg px-4 py-2 text-[#5C7E8D] outline-none border border-[#B9D9E5]"
                             />
                         </div>
                         <div className="flex flex-col gap-1">
-                            <p className="text-[#5C7E8D] font-medium text-sm">Choose Description*</p>
+                            <p className="text-[#5C7E8D] font-medium text-sm">Choose Description</p>
                             <input value={description} type="text" onChange={e => setDescription(e.target.value)} 
                                 className="bg-white rounded-lg px-4 py-2 text-[#5C7E8D] outline-none border border-[#B9D9E5] h-24 resize-none"
                             />
@@ -171,32 +171,32 @@ function SchedulePage() {
                         {/* date/time block */}
                         <div className="grid grid-cols-2 gap-4">
                             <div className="flex flex-col gap-1">
-                                <p className="text-[#5C7E8D] font-medium text-sm">Start Date*</p>
+                                <p className="text-[#5C7E8D] font-medium text-sm">Start Date</p>
                                 <input value={startDate} type="date" onChange={e => setStartDate(e.target.value)}
                                     className="bg-white rounded-lg px-4 py-2 text-[#5C7E8D] outline-none border border-[#B9D9E5]"   
                                 />
                             </div>
                             <div className="flex flex-col gap-1">
-                                <p className="text-[#5C7E8D] font-medium text-sm">End Date*</p>
+                                <p className="text-[#5C7E8D] font-medium text-sm">End Date</p>
                                 <input value={endDate} type="date" onChange={e => setEndDate(e.target.value)}
                                     className="bg-white rounded-lg px-4 py-2 text-[#5C7E8D] outline-none border border-[#B9D9E5]"    
                                 />
                             </div>
                             <div className="flex flex-col gap-1">
-                                <p className="text-[#5C7E8D] font-medium text-sm">Start Time*</p>
+                                <p className="text-[#5C7E8D] font-medium text-sm">Start Time</p>
                                 <input value={startTime} type="time" onChange={e => setStartTime(e.target.value)}
                                     className="bg-white rounded-lg px-4 py-2 text-[#5C7E8D] outline-none border border-[#B9D9E5]"
                                 />
                             </div>
                             <div className="flex flex-col gap-1">
-                                <p className="text-[#5C7E8D] font-medium text-sm">End Time*</p>
+                                <p className="text-[#5C7E8D] font-medium text-sm">End Time</p>
                                 <input value={endTime} type="time" onChange={e => setEndTime(e.target.value)}
                                     className="bg-white rounded-lg px-4 py-2 text-[#5C7E8D] outline-none border border-[#B9D9E5]"
                                 />
                             </div>
                         </div>
                         <div className="flex flex-col gap-1">
-                            <p className="text-[#5C7E8D] font-medium text-sm">CEP*</p>
+                            <p className="text-[#5C7E8D] font-medium text-sm">CEP</p>
                             <div className="flex gap-2">
                                 <input
                                     value={cep}
