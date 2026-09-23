@@ -1,15 +1,15 @@
 import { API_URL } from "./api"
 
-async function createActivity(name: string, description: string, user_id: number, image: string, group_id: number | null) {
+async function createActivity(name: string, description: string, image: string, group_id: number | null) {
     const response = await fetch(`${API_URL}/activity`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
+        credentials: "include",
         body: JSON.stringify({
             name: name,
             description: description,
-            user_id: user_id,
             image: image,
             group_id: group_id
         })
@@ -18,12 +18,13 @@ async function createActivity(name: string, description: string, user_id: number
     return data
 }
 
-async function searchActivity(name: string) {
-    const response = await fetch(`${API_URL}/activity?name=${name}`, {
+async function searchActivity() {
+    const response = await fetch(`${API_URL}/activity`, {
         method: "GET",
         headers: {
             'Content-Type': 'application/json'
         },
+        credentials: "include"
     })
     const data = await response.json()
     return data    
@@ -35,17 +36,19 @@ async function getActivity(activity_id: number) {
         headers: {
             'Content-Type': 'application/json'
         },
+        credentials: "include",
     })
     const data = await response.json()
     return data
 }
 
-async function listActivities(user_id: number) {
-    const response = await fetch(`${API_URL}/activity?user_id=${user_id}`, {
+async function listActivities() {
+    const response = await fetch(`${API_URL}/activity`, {
         method: "GET",
         headers: {
-            'Content-type': 'application/json'
+            'Content-Type': 'application/json'
         },
+        credentials: "include"
     })
     const data = await response.json()
     return data
@@ -57,6 +60,7 @@ async function deleteActivity(activity_id: number) {
         headers: {
             'Content-Type': 'application/json'
         },
+        credentials: "include",
         body: JSON.stringify({
             activity_id: activity_id
         })
@@ -71,6 +75,7 @@ async function updateActivity(name: string, description: string, activity_id: nu
         headers: {
             'Content-Type': 'application/json'
         },
+        credentials: "include",
         body: JSON.stringify({
             name: name,
             description: description,
@@ -84,4 +89,3 @@ async function updateActivity(name: string, description: string, activity_id: nu
 }
 
  export {createActivity, deleteActivity, listActivities, searchActivity, getActivity, updateActivity}
-

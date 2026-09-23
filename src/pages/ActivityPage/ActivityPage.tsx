@@ -5,7 +5,7 @@ import { useParams, useNavigate, useLocation } from "react-router-dom"
 import { useState, useEffect } from "react"
 import { createActivity, getActivity, deleteActivity, updateActivity } from "../../services/atividade"
 import { listSchedule } from "../../services/agendamento"
-import Modal from "../../components/Modal/Modal"
+import Modal from "../../components/modal/modal"
 import { deleteSchedule } from "../../services/agendamento"
 import { listGroups } from "../../services/grupo"
 import AvatarPicker from "../../components/AvatarPicker/AvatarPicker"
@@ -65,7 +65,7 @@ function ActivityPage() {
 
     useEffect(() => {
         const fetchGroups = async () => {
-            const data = await listGroups(1)
+            const data = await listGroups()
             if (Array.isArray(data)) setGroups(data)
         }
         fetchGroups()
@@ -87,7 +87,7 @@ function ActivityPage() {
     }
 
     const handleCreate = async () => {
-        await createActivity(name, description, 1, selectedAvatar || '', groupId ? Number(groupId) : null)
+        await createActivity(name, description, selectedAvatar || '', groupId ? Number(groupId) : null)
         navigate(groupId ? `/?group_id=${groupId}` : '/')
     }
 

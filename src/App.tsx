@@ -4,6 +4,8 @@ import ActivityPage from "./pages/ActivityPage/ActivityPage";
 import SchedulePage from "./pages/SchedulePage/SchedulePage";
 import SettingsPage from "./pages/SettingsPage/SettingsPage";
 import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
+import LoginPage from "./pages/LoginPage";
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 
 
 
@@ -14,10 +16,23 @@ function App() {
     <BrowserRouter>
       <div className="min-h-screen bg-[#BCE0F3]">
         <Routes> 
-          <Route path="/" element={<MainPage />} />
-          <Route path="/activity/:id" element={<ActivityPage />} />
-          <Route path="/schedule/:id" element={<SchedulePage />} />
-          <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/login" element={<LoginPage />}/>
+          <Route path="/" element={
+            <ProtectedRoute>
+              <MainPage/>
+            </ProtectedRoute>}/>
+          <Route path="/activity/:id" element={
+            <ProtectedRoute>
+              <ActivityPage />
+            </ProtectedRoute>} />
+          <Route path="/schedule/:id" element={
+            <ProtectedRoute>
+              <SchedulePage />
+            </ProtectedRoute>} />
+          <Route path="/settings" element={
+            <ProtectedRoute>
+              <SettingsPage />
+            </ProtectedRoute>} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </div>

@@ -6,6 +6,7 @@ async function createSchedule(name: string, description: string, data_inicio: st
         headers: {
             'Content-Type': 'application/json'
         },
+        credentials: "include",
         body: JSON.stringify({
             name: name,
             description: description,
@@ -27,7 +28,8 @@ async function listSchedule(activity_id: number) {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
-        }
+        },
+        credentials: "include"
     })
     const data = await response.json()
     return data
@@ -38,7 +40,8 @@ async function displaySchedule(agenId: number) {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
-        }
+        },
+        credentials: "include"
     })
     const data = await response.json()
     return data
@@ -50,6 +53,7 @@ async function deleteSchedule(schedule_id: number) {
         headers: {
             'Content-Type': 'application/json'
         },
+        credentials: "include",
         body: JSON.stringify({
             schedule_id: schedule_id
         })
@@ -63,7 +67,8 @@ async function searchSchedule(schedule_name: string, activity_id: number) {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
-        }
+        },
+        credentials: "include"
     })
     const data = await response.json()
     return data
@@ -75,6 +80,7 @@ async function editSchedule(name: string, description: string, data_inicio: stri
         headers: {
             'Content-Type': 'application/json'
         },
+        credentials: "include",
         body: JSON.stringify({
             name: name,
             description: description,

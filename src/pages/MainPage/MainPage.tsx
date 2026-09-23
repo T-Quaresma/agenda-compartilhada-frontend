@@ -1,5 +1,5 @@
 import Header from "../../components/Header/Header"
-import Modal from "../../components/Modal/Modal"
+import Modal from "../../components/modal/modal"
 import BottomNav from "../../components/BottomNav/BottomNav"
 import { useState, useEffect } from "react"
 import { listActivities } from "../../services/atividade"
@@ -7,6 +7,7 @@ import { listGroups, createGroup, deleteGroup, updateGroup } from "../../service
 import { Plus } from "lucide-react"
 import { useNavigate, useLocation } from "react-router-dom"
 import AvatarPicker from "../../components/AvatarPicker/AvatarPicker"
+import { logoutUser } from "../../services/auth"
 
 function MainPage() {
     const [activities, setActivities] = useState<any[]>([])
@@ -30,7 +31,7 @@ function MainPage() {
     useEffect(() => {
         const fetchActivities = async () => {
             try {
-                const data = await listActivities(1)
+                const data = await listActivities()
                 if (Array.isArray(data)) {
                     setActivities(data) 
                 } else {
@@ -47,14 +48,15 @@ function MainPage() {
 
     useEffect(() => {
         const fetchGroups = async () => {
-            const data = await listGroups(1)
+            const data = await listGroups()
             if (Array.isArray(data)) setGroups(data)
         }
         fetchGroups()
     }, [])
     
     const handleCreateGroup = async () => {
-        const result = await createGroup(newGroupName, 1, selectedAvatar)
+        console.log("Avatar selecionado:", selectedAvatar)
+        const result = await createGroup(newGroupName, selectedAvatar)
         setGroups(prev => [...prev, { grupoId: result.grupoId, nomeGrupo: newGroupName, imagem: selectedAvatar }])
         setNewGroupName('')
         setSelectedAvatar(null)
@@ -62,17 +64,48 @@ function MainPage() {
     }
 
     const handleDeleteGroup = async () => {
-        await deleteGroup(Number(groupToDelete))
-        setGroups(prev => prev.filter(g => g.grupoId !== groupToDelete))
-        if (selectedGroupId === groupToDelete) setSelectedGroupId(null)
+        if (groupToDelete === null) return
+
+        const groupId = groupToDelete
+
+        await deleteGroup(groupId)
+
+        setGroups(prev =>
+            prev.filter(g => g.grupoId !== groupId)
+        )
+
+        setActivities(prev =>
+            prev.filter(a => a.grupoId !== groupId)
+        )
+
+        if (selectedGroupId === groupId) {
+            setSelectedGroupId(null)
+            navigate("/", { replace: true })
+        }
+
         setGroupToDelete(null)
     }
 
     const handleEditGroup = async () => {
-        await updateGroup(editingGroup!.id, editGroupName, null)
-        setGroups(prev => prev.map(g => g.grupoId === editingGroup!.id ? {...g, nomeGrupo: editGroupName} : g))
-        setEditingGroup(null)
+    await updateGroup(
+        editingGroup!.id,
+        editGroupName,
+        selectedAvatar
+    )
+    setGroups(prev =>
+        prev.map(g => g.grupoId === editingGroup!.id? {...g, nomeGrupo: editGroupName, imagem: selectedAvatar } : g ))
+    setEditingGroup(null)
+    setSelectedAvatar(null)
     }
+
+    const handleLogout = async () => {
+        try {
+            await logoutUser();
+            navigate("/login");
+        }catch (error) {
+            console.error("Logout failed", error);
+        }
+    };
 
     // Filtra por grupo E por searchTerm
     const filteredActivities = activities
@@ -147,6 +180,7 @@ function MainPage() {
 
             {!loading && (
                 <div className="space-y-[40px]">
+                    <button onClick={handleLogout}>Logout</button>
                     {/* Título e search */}
                     <div className="flex flex-col items-center gap-3 py-4">
                         <h2 className="text-[#5C7E8D] font-bold text-xl">
@@ -196,7 +230,7 @@ function MainPage() {
 
             <Modal
                 title="Delete Group"
-                message="This will not delete the activities inside."
+                message="This will delete the activities inside."
                 onConfirm={handleDeleteGroup}
                 onCancel={() => setGroupToDelete(null)}
                 isOpen={groupToDelete !== null}

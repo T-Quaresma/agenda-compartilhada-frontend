@@ -5,8 +5,9 @@ import { useState, useEffect } from "react"
 import { createSchedule, displaySchedule, deleteSchedule, editSchedule } from "../../services/agendamento"
 import ScheduleCard from "../../components/ScheduleCard/ScheduleCard"
 import { listGroups } from "../../services/grupo"
-import Modal from "../../components/Modal/Modal"
+import Modal from "../../components/modal/modal"
 import {Undo2} from "lucide-react"
+import { searchCep } from "../../services/cep"
 
 
 function SchedulePage() {
@@ -24,6 +25,8 @@ function SchedulePage() {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
     const [groups, setGroups] = useState<any[]>([])
+    const [cep, setCep] = useState('')
+    const [cepError, setCepError] = useState('')
 
     const { id } = useParams()
     const location = useLocation()
@@ -68,7 +71,7 @@ function SchedulePage() {
 
     useEffect(() => {
         const fetchGroups = async () => {
-            const data = await listGroups(1)
+            const data = await listGroups()
             if (Array.isArray(data)) setGroups(data)
         }
         fetchGroups()
@@ -112,6 +115,30 @@ function SchedulePage() {
         setSchedule(data[0])
     }
 
+    const handleSearchCep = async () => {
+        try {
+            setCepError('')
+            const cleanCep = cep.replace(/\D/g, '')
+            if (cleanCep.length !== 8) {
+                setCepError('CEP must contain 8 numbers.')
+                return
+            }
+            const address = await searchCep(cleanCep)
+            const formattedAddress = [
+                address.rua,
+                address.bairro,
+                address.cidade,
+                address.estado
+            ]
+                .filter(Boolean)
+                .join(', ')
+            setLocal(formattedAddress)
+        } catch (error) {
+            console.error("Error searching CEP:", error)
+            setCepError('CEP not found.')
+        }
+    }
+    
     function renderContent() {
         if (loading) {
             return (
@@ -168,9 +195,34 @@ function SchedulePage() {
                                 />
                             </div>
                         </div>
+                        <div className="flex flex-col gap-1">
+                            <p className="text-[#5C7E8D] font-medium text-sm">CEP*</p>
+                            <div className="flex gap-2">
+                                <input
+                                    value={cep}
+                                    type="text"
+                                    maxLength={9}
+                                    placeholder="00000-000"
+                                    onChange={e => setCep(e.target.value)}
+                                    className="flex-1 bg-white rounded-lg px-4 py-2 text-[#5C7E8D] outline-none border border-[#B9D9E5]"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={handleSearchCep}
+                                    className="bg-[#9FD7F1] text-white px-6 py-2 rounded-lg"
+                                >
+                                    Search
+                                </button>
+                            </div>
+                            {cepError && (
+                                <p className="text-red-500 text-sm">
+                                    {cepError}
+                                </p>
+                            )}
+                        </div>
                          {/* local/frequency block */}
                         <div className="flex flex-col gap-1">
-                            <p className="text-[#5C7E8D] font-medium text-sm">Local*</p>
+                            <p className="text-[#5C7E8D] font-medium text-sm">Local</p>
                             <input value={local} type="text" onChange={e => setLocal(e.target.value)}
                                 className="bg-white rounded-lg px-4 py-2 text-[#5C7E8D] outline-none border border-[#B9D9E5]"
                             />
@@ -246,6 +298,31 @@ function SchedulePage() {
                                     className="bg-white rounded-lg px-4 py-2 text-[#5C7E8D] outline-none border border-[#B9D9E5]"
                                 />
                             </div>
+                        </div>
+                        <div className="flex flex-col gap-1">
+                            <p className="text-[#5C7E8D] font-medium text-sm">CEP*</p>
+                            <div className="flex gap-2">
+                                <input
+                                    value={cep}
+                                    type="text"
+                                    maxLength={9}
+                                    placeholder="00000-000"
+                                    onChange={e => setCep(e.target.value)}
+                                    className="flex-1 bg-white rounded-lg px-4 py-2 text-[#5C7E8D] outline-none border border-[#B9D9E5]"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={handleSearchCep}
+                                    className="bg-[#9FD7F1] text-white px-6 py-2 rounded-lg"
+                                >
+                                    Search
+                                </button>
+                            </div>
+                            {cepError && (
+                                <p className="text-red-500 text-sm">
+                                    {cepError}
+                                </p>
+                            )}
                         </div>
                         <div className="flex flex-col gap-1">
                             <p className="text-[#5C7E8D] font-medium text-sm">Local*</p>
