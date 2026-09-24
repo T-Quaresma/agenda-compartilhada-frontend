@@ -1,157 +1,328 @@
-# agenda-compartilhada-frontend
+# agenda-compartilhada-frontend (SHARP)
 
-ShareHub - Frontend MVP 2
+Repositorio criado para o desenvolvimento do frontend do projeto SHARP - MVP Full Stack.
 
-Repository created for the full development of the Frontend MVP - Advanced Frontend Development.
-
-Web interface for managing shared agendas between users. Allows creating and managing activity groups, activities and schedules through a SPA (Single Page Application) built with React and TypeScript.
+**Title: SHARP**
 
 I------------------------------------------------------------------------------------------I
 
-Technologies
+**Project Description**
+
+Frontend application for managing shared activities and schedules between users.
+
+The application allows users to authenticate, create and organize activities into groups, create schedules, manage participants and use Brazilian postal codes to retrieve address information.
+
+The frontend communicates with the SHARP Principal API for application resources and with the SHARP Authentication API for authentication and session management.
+
+I------------------------------------------------------------------------------------------I
+
+**Development Tools**
 
 React
 TypeScript
 Vite
 React Router DOM
-Tailwind3 CSS
-Lucide React
+Tailwind CSS
+Lucide
+Docker
 
 I------------------------------------------------------------------------------------------I
 
-Prerequisites
+**Project Architecture**
 
-Node.js installed on your machine.
-The ShareHub backend must be running before starting the frontend.
-Backend repository: https://github.com/T-Quaresma/agenda-compartilhada-backend
+SHARP is composed of three developed components and one external API:
 
-Note: with the professor's authorization, this project uses the real backend from the previous MVP (FullStack Basico) instead of simulated data from a local JSON file.
+**Frontend**
+- React and TypeScript application.
+- Runs on port 5173.
+- Provides the user interface of the SHARP application.
+- Communicates with the Principal API to manage application resources.
+- Communicates with the Authentication API for login, session validation, token refresh and logout.
+
+**Principal API**
+- Python and Flask REST API.
+- Runs on port 5000.
+- Manages users, groups, activities, schedules and participants.
+- Stores application data using SQLite.
+- Communicates with ViaCEP to retrieve address information.
+
+**Authentication API**
+- Python and Flask REST API.
+- Runs on port 5001.
+- Responsible for registration, login, JWT validation, token refresh and logout.
+- Uses HTTP-only cookies to manage the authenticated session.
+
+**External API**
+- ViaCEP.
+- Used by the Principal API to retrieve address information from Brazilian postal codes.
+- The processed address information is used by the frontend when creating or editing schedules.
+
+**Communication overview:**
+
+                         SHARP
+
+                      Client
+                    (Browser)
+                         |
+                         v
+              +---------------------+
+              |      Frontend       |
+              | React + TypeScript  |
+              |     Port 5173       |
+              +-----+----------+----+
+                    |          |
+               REST |          | Authentication
+                    |          |
+                    v          v
+          +---------------+   +------------------+
+          | Principal API |<->| Authentication   |
+          | Flask/Python  |   | API              |
+          | Port 5000     |   | Flask/Python     |
+          +------+--------+   | Port 5001        |
+                 |            +------------------+
+          +------+------+
+          |             |
+          v             v
+      +--------+     +---------+
+      | SQLite |     | ViaCEP  |
+      |Database|     |External |
+      +--------+     |   API   |
+                     +---------+
 
 I------------------------------------------------------------------------------------------I
 
-Installation and Execution
+**Local Installation**
 
-1. Clone the repository:
-git clone https://github.com/T-Quaresma/agenda-compartilhada-frontend
+These instructions can be used to execute the Frontend locally without Docker.
+
+**Prerequisites**
+
+Node.js
+npm
+Git
+
+For all application features to work, the SHARP Principal API must be running on port 5000 and the SHARP Authentication API must be running on port 5001.
+
+**1. Clone the repository:**
+
+git clone URL_DO_REPOSITORIO_DO_FRONTEND
+
+**2. Go to the project directory:**
+
 cd agenda-compartilhada-frontend
-2. Install dependencies:
+
+**3. Install the dependencies:**
+
 npm install
-3. Make sure the backend is running:
-cd agenda-compartilhada-backend
-source venv/Scripts/activate
-py app.py
-4. Start the frontend:
+
+**4. Start the development server:**
+
 npm run dev
-5. Open the browser and navigate to:
+
+**The Frontend will be available at:**
+
 http://localhost:5173
 
-I------------------------------------------------------------------------------------------I
-
-Features
-
-Activity Groups
-
-* Create new activity groups with custom avatar
-* View all groups in the bottom navigation bar
-* Select a group to filter activities
-* Edit group name and avatar
-* Delete groups with confirmation modal
-* Move activities between groups
-
-Activities
-
-* Create new activities linked to a group with custom avatar
-* View all activities in a responsive card grid
-* Search activities by name
-* Edit activity name, description and avatar
-* Delete activities with confirmation modal
-
-Schedules
-
-* Create schedules linked to an activity
-* Set start and end date, start and end time, location and frequency
-* View schedules within each activity
-* Edit all schedule details
-* Delete schedules with confirmation modal
-* Navigate directly to a schedule page by clicking on it
-
-Navigation
-
-* Bottom navigation bar with activity groups
-* Horizontal scroll when more than 8 groups are created
-* Return button on activity and schedule pages
-* 404 page for unknown routes
-
-Usability
-
-* Tooltips on all buttons explaining their action
-* Visual feedback after user actions (clicks, form submissions, loading states)
-* Conditional messages for empty or error states (e.g. "no items found")
-* Responsive layout, adapting to desktop and tablet screen sizes
+Open this address in a web browser to access the SHARP application.
 
 I------------------------------------------------------------------------------------------I
 
-Reusable Components
+**Docker Execution**
 
-Header - Displayed on all pages
-BottomNav - Displayed on all pages except 404, shows activity groups
-ScheduleCard - Used in ActivityPage (compact mode) and SchedulePage (full mode)
-Modal - Used for delete and edit confirmations across all pages
-AvatarPicker - Used for selecting avatars for groups and activities
+The Frontend can also be executed inside a Docker container.
+
+**Prerequisites**
+
+Docker Desktop must be installed and running.
+
+The Principal API and Authentication API must also be running for all application features to work.
+
+**1. Clone the repository:**
+
+git clone URL_DO_REPOSITORIO_DO_FRONTEND
+
+**2. Enter the project directory:**
+
+cd agenda-compartilhada-frontend
+
+**3. Build the Docker image:**
+
+docker build -t sharp-frontend .
+
+**4. Create the Docker network used by SHARP:**
+
+docker network create sharp-network
+
+If the network already exists, it does not need to be created again.
+
+**5. Start the Frontend container:**
+
+docker run -d --name sharp-frontend \
+  --network sharp-network \
+  -p 5173:5173 \
+  sharp-frontend
+
+**The parameters used in this command are:**
+
+--name sharp-frontend  
+Defines the name of the container.
+
+--network sharp-network  
+Connects the container to the SHARP Docker network.
+
+-p 5173:5173  
+Makes the Frontend available through port 5173.
+
+sharp-frontend  
+Defines the Docker image used to create the container.
+
+**The Frontend will be available at:**
+
+http://localhost:5173
+
+**Important:**
+
+The Frontend communicates with the APIs through the browser.
+
+The Principal API must be available at:
+
+http://localhost:5000
+
+The Authentication API must be available at:
+
+http://localhost:5001
 
 I------------------------------------------------------------------------------------------I
 
-Routing and Navigation Hooks
+**Docker Commands**
 
-Routing is handled with React Router DOM. The following hooks are used across the pages:
+**To view running containers:**
 
-* useNavigate - used for redirecting between pages (e.g. after creating, editing or deleting an item)
-* useParams - used to read route parameters, such as activity or schedule IDs, directly from the URL
-* useLocation - used to read the current URL/route state across components
-* useState / useEffect - used throughout the app to manage local component state and side effects (e.g. fetching data on mount)
+docker ps
 
-A dedicated 404 route (NotFoundPage) handles any unmatched/unknown URLs.
+**To view all containers:**
 
-I------------------------------------------------------------------------------------------I
+docker ps -a
 
-Project Structure
+**To view Docker images:**
 
-src/
-components/   - Reusable components (Header, BottomNav, ScheduleCard, Modal, AvatarPicker)
-pages/        - Application pages (MainPage, ActivityPage, SchedulePage, SettingsPage, NotFoundPage)
-services/     - API communication functions (atividade, agendamento, grupo, api)
-assets/
-avatars/      - Avatar images (SVG format, licensed under CC BY 4.0)
+docker images
 
-I------------------------------------------------------------------------------------------I
+**To stop the Frontend:**
 
-How to Use
+docker stop sharp-frontend
 
-1. Open the app — the Main Page shows the activity grid and the bottom navigation bar.
-2. Create a group — click "New Group" in the bottom bar, choose a name and avatar.
-3. Select a group — click a group card to filter activities by that group.
-4. Create an activity — click "New Activity", fill in the name, description and avatar. If a group is selected, the activity will be linked to it automatically.
-5. Open an activity — click any activity card to see its details and schedule list.
-6. Create a schedule — inside an activity page, click "Create Schedule" and fill in the details.
-7. Open a schedule — click any schedule card to see its full details, edit or delete it.
-8. Edit or delete — use the Edit and Delete buttons on activity and schedule pages. Deleting always requires confirmation.
-9. Move an activity to another group — click Edit on the activity and select a group from the "Move to Group" dropdown.
-10. Delete a group — click the trash icon on the group card in the bottom bar. This does not delete the activities inside it.
+**To start the existing Frontend container again:**
 
-I------------------------------------------------------------------------------------------I
-Roadmap - Planned for MVP 3
+docker start sharp-frontend
 
-The following features are part of the overall ShareHub project vision but are NOT implemented in this MVP 2 delivery. They are planned for MVP 3:
+**To stop and remove the Frontend container:**
 
-* User account creation and authentication (login/password)
-* Sharing schedules/activities between users
-* Participants - references to users with whom activities/schedules are shared
-* Replace the current fixed avatar picker with the ability to upload custom images directly from the user's device, to be used instead of the predefined avatars
+docker stop sharp-frontend
+
+docker rm sharp-frontend
 
 I------------------------------------------------------------------------------------------I
 
-Credits
+**Application Functions**
 
-Avatars: Material Design 3 Kit, licensed under CC BY 4.0
-https://creativecommons.org/licenses/by/4.0/
+**Authentication**
 
+- Login using email and password.
+- Authentication session validation.
+- Automatic access token refresh when necessary.
+- Logout.
+- Protected application routes that require an authenticated session.
+
+**Groups**
+
+- Create groups to organize activities.
+- Add an optional image to a group.
+- Select a group to filter its activities.
+- Update group information.
+- Delete groups.
+
+**Activities**
+
+- Create activities.
+- Associate activities with groups.
+- Add a name, description and optional image.
+- Search and display activities.
+- Update activities.
+- Delete activities.
+
+**Schedules**
+
+- Create schedules associated with activities.
+- Configure name and description.
+- Configure start and end dates.
+- Configure start and end times.
+- Configure location.
+- Configure frequency.
+- Update schedules.
+- Delete schedules.
+
+**Participants**
+
+- Add users as participants to schedules.
+- Display participants associated with a schedule.
+- Remove participants from schedules.
+
+**CEP Search**
+
+- Search for Brazilian addresses using a CEP.
+- Receive address information processed by the Principal API.
+- Automatically fill location information that can still be edited by the user.
+
+I------------------------------------------------------------------------------------------I
+
+**Authentication Flow**
+
+The Frontend communicates with the Authentication API through HTTP requests using credentials.
+
+Authentication tokens are stored as HTTP-only cookies and are not directly accessed by the React application.
+
+**Login flow:**
+
+Frontend -> Authentication API -> Principal API -> Credential Verification
+
+After successful authentication, the Authentication API creates the access and refresh tokens.
+
+**Protected route flow:**
+
+Frontend -> Authentication API -> Access Token Validation
+
+If the access token is valid, the user can access the protected page.
+
+**Expired access token flow:**
+
+Frontend -> Authentication API -> Refresh Token -> New Access Token
+
+If the access token has expired, the Frontend requests a new access token using the refresh token and validates the session again.
+
+**Logout flow:**
+
+Frontend -> Authentication API -> Authentication Cookies Removed
+
+I------------------------------------------------------------------------------------------I
+
+**External API Integration**
+
+The Frontend uses the Principal API to access address information provided by ViaCEP.
+
+The Frontend does not communicate directly with ViaCEP.
+
+**Communication flow:**
+
+Frontend -> Principal API -> ViaCEP
+
+After the Principal API processes the ViaCEP response, the Frontend receives:
+
+- Street
+- Neighborhood
+- City
+- State
+
+The information is used to help fill the location field when creating or editing a schedule.
+
+The location remains editable after the CEP search.

@@ -6,6 +6,7 @@ import SettingsPage from "./pages/SettingsPage/SettingsPage";
 import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
 import LoginPage from "./pages/LoginPage";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
+import RegisterPage from "./pages/RegisterPage/registerPage";
 
 
 
@@ -16,7 +17,8 @@ function App() {
     <BrowserRouter>
       <div className="min-h-screen bg-[#BCE0F3]">
         <Routes> 
-          <Route path="/login" element={<LoginPage />}/>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
           <Route path="/" element={
             <ProtectedRoute>
               <MainPage/>

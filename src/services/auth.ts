@@ -22,6 +22,16 @@ interface LogoutResponse {
     Message: string;
 }
 
+interface RegisterData {
+    name: string;
+    email: string;
+    senha: string;
+}
+
+interface RegisterResponse {
+    Message: string;
+}
+
 export class HttpError extends Error {
     status: number;
 
@@ -117,4 +127,30 @@ export async function logoutUser(): Promise<LogoutResponse> {
     }
 
     return await response.json();
+}
+
+export async function registerUser(data: RegisterData): Promise<RegisterResponse> {
+    try {
+        const response = await fetch("http://localhost:5001/auth/register", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: "include",
+            body: JSON.stringify(data)
+        });
+
+        if (!response.ok) {
+            throw new HttpError(
+                response.status,
+                `HTTP error! status: ${response.status}`
+            );
+        }
+
+        return await response.json();
+
+    } catch (error) {
+        console.error("Error registering user:", error);
+        throw error;
+    }
 }

@@ -180,7 +180,11 @@ function MainPage() {
 
             {!loading && (
                 <div className="space-y-[40px]">
-                    <button onClick={handleLogout}>Logout</button>
+                    <button
+                        onClick={handleLogout}
+                        className="bg-white text-[#5C7E8D] font-semibold px-4 py-2 rounded-md border border-[#5C7E8D] hover:bg-[#5C7E8D] hover:text-white transition-colors cursor-pointer">
+                        Logout
+                    </button>
                     {/* Título e search */}
                     <div className="flex flex-col items-center gap-3 py-4">
                         <h2 className="text-[#5C7E8D] font-bold text-xl">
