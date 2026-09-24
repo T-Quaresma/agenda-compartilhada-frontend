@@ -79,7 +79,7 @@ For all application features to work, the SHARP Principal API must be running on
 
 **1. Clone the repository:**
 
-git clone URL_DO_REPOSITORIO_DO_FRONTEND
+git clone https://github.com/T-Quaresma/agenda-compartilhada-frontend/tree/mvp3
 
 **2. Go to the project directory:**
 
@@ -113,7 +113,7 @@ The Principal API and Authentication API must also be running for all applicatio
 
 **1. Clone the repository:**
 
-git clone URL_DO_REPOSITORIO_DO_FRONTEND
+git clone https://github.com/T-Quaresma/agenda-compartilhada-frontend/tree/mvp3
 
 **2. Enter the project directory:**
 
