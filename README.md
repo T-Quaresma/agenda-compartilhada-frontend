@@ -2,11 +2,11 @@
 
 Repositorio criado para o desenvolvimento do frontend do projeto SHARP - MVP Full Stack.
 
-**Title: SHARP**
+## Title: SHARP
 
 I------------------------------------------------------------------------------------------I
 
-**Project Description**
+## Project Description
 
 Frontend application for managing shared activities and schedules between users.
 
@@ -16,7 +16,7 @@ The frontend communicates with the SHARP Principal API for application resources
 
 I------------------------------------------------------------------------------------------I
 
-**Development Tools**
+## Development Tools
 
 React
 TypeScript
@@ -28,7 +28,7 @@ Docker
 
 I------------------------------------------------------------------------------------------I
 
-**Project Architecture**
+## Project Architecture
 
 SHARP is composed of three developed components and one external API:
 
@@ -57,41 +57,15 @@ SHARP is composed of three developed components and one external API:
 - Used by the Principal API to retrieve address information from Brazilian postal codes.
 - The processed address information is used by the frontend when creating or editing schedules.
 
-**Communication overview:**
+## Project Architecture
 
-                         SHARP
+The following diagram illustrates the architecture and communication between the components of the Sharp application:
 
-                      Client
-                    (Browser)
-                         |
-                         v
-              +---------------------+
-              |      Frontend       |
-              | React + TypeScript  |
-              |     Port 5173       |
-              +-----+----------+----+
-                    |          |
-               REST |          | Authentication
-                    |          |
-                    v          v
-          +---------------+   +------------------+
-          | Principal API |<->| Authentication   |
-          | Flask/Python  |   | API              |
-          | Port 5000     |   | Flask/Python     |
-          +------+--------+   | Port 5001        |
-                 |            +------------------+
-          +------+------+
-          |             |
-          v             v
-      +--------+     +---------+
-      | SQLite |     | ViaCEP  |
-      |Database|     |External |
-      +--------+     |   API   |
-                     +---------+
+![Sharp Architecture Diagram](src/assets/docs/sharp-architecture.png)
 
 I------------------------------------------------------------------------------------------I
 
-**Local Installation**
+## Local Installation
 
 These instructions can be used to execute the Frontend locally without Docker.
 
@@ -127,7 +101,7 @@ Open this address in a web browser to access the SHARP application.
 
 I------------------------------------------------------------------------------------------I
 
-**Docker Execution**
+##  Docker Execution
 
 The Frontend can also be executed inside a Docker container.
 
@@ -194,7 +168,7 @@ http://localhost:5001
 
 I------------------------------------------------------------------------------------------I
 
-**Docker Commands**
+##  Docker Commands
 
 **To view running containers:**
 
@@ -224,7 +198,7 @@ docker rm sharp-frontend
 
 I------------------------------------------------------------------------------------------I
 
-**Application Functions**
+##  Application Functions
 
 **Authentication**
 
@@ -276,7 +250,7 @@ I-------------------------------------------------------------------------------
 
 I------------------------------------------------------------------------------------------I
 
-**Authentication Flow**
+## Authentication Flow
 
 The Frontend communicates with the Authentication API through HTTP requests using credentials.
 
@@ -306,7 +280,7 @@ Frontend -> Authentication API -> Authentication Cookies Removed
 
 I------------------------------------------------------------------------------------------I
 
-**External API Integration**
+## External API Integration
 
 The Frontend uses the Principal API to access address information provided by ViaCEP.
 
