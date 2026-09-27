@@ -111,13 +111,15 @@ Docker Desktop must be installed and running.
 
 The Principal API and Authentication API must also be running for all application features to work.
 
-**1. Clone the repository:**
+**1. Clone the repository, you have to switch to the MVP3 branch:**
 
-git clone https://github.com/T-Quaresma/agenda-compartilhada-frontend/tree/mvp3
+git clone https://github.com/T-Quaresma/agenda-compartilhada-frontend
 
-**2. Enter the project directory:**
+
+**2. Enter the project directory and change to MVP3 branch:**
 
 cd agenda-compartilhada-frontend
+git switch mvp3
 
 **3. Build the Docker image:**
 
@@ -135,6 +137,10 @@ docker run -d --name sharp-frontend \
   --network sharp-network \
   -p 5173:5173 \
   sharp-frontend
+
+  or
+
+docker run -d --name sharp-frontend --network sharp-network -p 5173:5173 sharp-frontend
 
 **The parameters used in this command are:**
 
