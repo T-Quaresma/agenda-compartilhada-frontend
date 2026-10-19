@@ -49,7 +49,6 @@ function RegisterPage() {
                         onChange={(e) => setName(e.target.value)}
                         className="w-full bg-white rounded-md px-4 py-3 text-[#5C7E8D] outline-none border border-transparent focus:border-[#26A5FF]"
                     />
-
                     <input
                         type="email"
                         placeholder="Email"
@@ -57,7 +56,6 @@ function RegisterPage() {
                         onChange={(e) => setEmail(e.target.value)}
                         className="w-full bg-white rounded-md px-4 py-3 text-[#5C7E8D] outline-none border border-transparent focus:border-[#26A5FF]"
                     />
-
                     <input
                         type="password"
                         placeholder="Password"

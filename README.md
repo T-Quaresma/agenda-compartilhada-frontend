@@ -228,6 +228,7 @@ I-------------------------------------------------------------------------------
 **Schedules**
 
 - Create schedules associated with activities.
+- View schedules for the authenticated user's activities and filter them by activity.
 - Configure name and description.
 - Configure start and end dates.
 - Configure start and end times.

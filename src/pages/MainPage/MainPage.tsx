@@ -192,6 +192,12 @@ function MainPage() {
                                 ? groups.find(g => g.grupoId === selectedGroupId)?.nomeGrupo 
                                 : 'All Activities'}
                         </h2>
+                        <button
+                            onClick={() => navigate("/schedules")}
+                            className="bg-white rounded-full px-4 py-2 text-[#5C7E8D] font-semibold hover:bg-[#E1EFF4]"
+                        >
+                            View my schedules
+                        </button>
                         <input 
                             type="text"
                             placeholder="Search for activities"

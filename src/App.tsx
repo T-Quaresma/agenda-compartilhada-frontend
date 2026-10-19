@@ -7,6 +7,7 @@ import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
 import LoginPage from "./pages/LoginPage";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import RegisterPage from "./pages/RegisterPage/registerPage";
+import NextSchedules from "./pages/NextSchedulesPage/NextSchedules";
 
 
 
@@ -34,6 +35,10 @@ function App() {
           <Route path="/settings" element={
             <ProtectedRoute>
               <SettingsPage />
+            </ProtectedRoute>} />
+          <Route path="/schedules" element={
+            <ProtectedRoute>
+              <NextSchedules />
             </ProtectedRoute>} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
