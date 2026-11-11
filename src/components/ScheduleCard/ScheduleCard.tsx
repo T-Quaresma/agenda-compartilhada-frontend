@@ -14,11 +14,11 @@ type ScheduleProps = {
     showDelete?: boolean
     compact?: boolean
     onEditClick?: () => void
-    onDeleteClick: () => void
+    onDeleteClick?: () => void
     onCardClick?: () => void
 }
 
-function ScheduleCard({ nomeAtiv, nomeAgen, descAgen, data_inicio, data_fim, hora_inicio, hora_fim, local, frequency, compact, onEditClick, onDeleteClick, onCardClick }: ScheduleProps) {
+function ScheduleCard({ nomeAtiv, nomeAgen, descAgen, data_inicio, data_fim, hora_inicio, hora_fim, local, frequency, compact, onEditClick, onDeleteClick, onCardClick, showDelete = true }: ScheduleProps) {
     
     // Formata data: "Wed, 15 Jul 2026 00:00:00 GMT" → "Wed, 15 Jul 2026"
     const formatDate = (dateStr: string | null) => {
@@ -63,11 +63,13 @@ function ScheduleCard({ nomeAtiv, nomeAgen, descAgen, data_inicio, data_fim, hor
                             )}
                         </div>
                     </div>
-                    <button 
-                        onClick={(e) => { e.stopPropagation(); onDeleteClick() }}
-                        className="ml-2 p-1">
-                        <Trash2 size={18} color="#26A5FF" />
-                    </button>
+                    {showDelete && onDeleteClick && (
+                        <button 
+                            onClick={(e) => { e.stopPropagation(); onDeleteClick?.() }}
+                            className="ml-2 p-1">
+                            <Trash2 size={18} color="#26A5FF" />
+                        </button>
+                    )}
                 </div>
                 <div className="h-px bg-white w-[40%] mx-auto mt-3"></div>
             </div>
@@ -134,14 +136,17 @@ function ScheduleCard({ nomeAtiv, nomeAgen, descAgen, data_inicio, data_fim, hor
                             </button>
                         </div>
                     )}
-                        <div className="flex flex-col items-center gap-1">
-                            <p className="text-[#5C7E8D] text-xs">Delete Schedule</p>
-                            <button
-                                onClick={(e) => { e.stopPropagation(); onDeleteClick() }}
-                                className="bg-[#D22D39] text-white px-6 py-1 rounded-full text-sm w-[100px]">
-                                Delete
-                            </button>
-                        </div>
+                        {showDelete && onDeleteClick &&(
+                            <div className="flex flex-col items-center gap-1">
+                                <p className="text-[#5C7E8D] text-xs">Delete Schedule</p>
+                            
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); onDeleteClick?.() }}
+                                    className="bg-[#D22D39] text-white px-6 py-1 rounded-full text-sm w-[100px]">
+                                    Delete
+                                </button>
+                            </div>
+                        )}          
                     </div>
                 </div>
 

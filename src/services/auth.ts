@@ -57,7 +57,7 @@ export async function loginUser(data: LoginData): Promise<LoginResponse> {
         );
 
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            throw new HttpError(response.status, `HTTP error! status: ${response.status}`);
         }
 
         return await response.json();
@@ -89,7 +89,7 @@ export async function validateUser(): Promise<ValidateResponse> {
         }
     );
     if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new HttpError(response.status, `HTTP error! status: ${response.status}`);
     }
 
     return await response.json()

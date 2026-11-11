@@ -3,7 +3,7 @@ import BottomNav from "../../components/BottomNav/BottomNav"
 import ScheduleCard from "../../components/ScheduleCard/ScheduleCard"
 import { useParams, useNavigate, useLocation } from "react-router-dom"
 import { useState, useEffect } from "react"
-import { createActivity, getActivity, deleteActivity, updateActivity } from "../../services/atividade"
+import { createActivity, getActivity, deleteActivity, updateActivity, listSharedActivities } from "../../services/atividade"
 import { listSchedule } from "../../services/agendamento"
 import Modal from "../../components/modal/modal"
 import { deleteSchedule } from "../../services/agendamento"
@@ -28,40 +28,82 @@ function ActivityPage() {
     const navigate = useNavigate()
     const { id } = useParams()
     const location = useLocation()
+    
 
     const queryParams = new URLSearchParams(location.search)
     const groupId = queryParams.get('group_id')
+    const isShared = new URLSearchParams(location.search).get("shared") === "true";
 
     useEffect(() => {
-        const fetchActivityId = async () => {
-            if (id && id !== 'new') {
-                try {
-                    const data = await getActivity(Number(id))
-                    setActivity(data[0])
-                } catch {
-                    setError('Error loading activity.')
-                } finally {
-                    setLoading(false)
+        let cancelled = false;
+
+        async function loadActivity() {
+            if (!id || id === "new") {
+                setLoading(false);
+                return;
+            }
+
+            setLoading(true);
+            setError(null);
+            setActivity(null);
+            setScheduleList([]);
+
+            try {
+                if (isShared) {
+                    const sharedActivities = await listSharedActivities();
+
+                    const sharedActivity = sharedActivities.find(
+                        activity => activity.ativId === Number(id)
+                    );
+
+                    if (!sharedActivity) {
+                        throw new Error("Shared activity not found.");
+                    }
+
+                    if (!cancelled) {
+                        setActivity(sharedActivity);
+
+                        setScheduleList(
+                            sharedActivity.schedules.map(schedule => ({
+                                ...schedule,
+                                nomeAtiv: sharedActivity.nomeAtiv
+                            }))
+                        );
+                    }
+                } else {
+                    const activityData = await getActivity(Number(id));
+                    const scheduleData = await listSchedule(Number(id));
+
+                    if (!activityData?.[0]) {
+                        throw new Error("Activity not found.");
+                    }
+
+                    if (!cancelled) {
+                        setActivity(activityData[0]);
+                        setScheduleList(
+                            Array.isArray(scheduleData) ? scheduleData : []
+                        );
+                    }
                 }
-            } else {
-                setLoading(false)
+            } catch (error) {
+                console.error("Error loading activity:", error);
+
+                if (!cancelled) {
+                    setError("Error loading activity.");
+                }
+            } finally {
+                if (!cancelled) {
+                    setLoading(false);
+                }
             }
         }
-        fetchActivityId()
-    }, [id])
 
-    useEffect(() => {
-        fetchScheduleList()
-    }, [id])
+        loadActivity();
 
-    useEffect(() => {
-        if (isEditing && activity) {
-            setName(activity?.nomeAtiv || '')
-            setDescription(activity?.descAtiv || '')
-            setSelectedAvatar(activity?.imagem || '')
-            setSelectedGroup(activity?.grupoId || null)
-        }
-    }, [isEditing])
+        return () => {
+            cancelled = true;
+        };
+    }, [id, isShared]);
 
     useEffect(() => {
         const fetchGroups = async () => {
@@ -157,7 +199,7 @@ function ActivityPage() {
             )
         }
 
-        if (isEditing) {
+        if (isEditing && !isShared) {
             return (
                 <div className="flex justify-center px-16 pt-12">
                     <div className="bg-[#E1EFF4] rounded-2xl p-8 w-full max-w-[600px] flex flex-col gap-4">
@@ -233,26 +275,28 @@ function ActivityPage() {
                                         <p className="text-[#758B94] text-4xl text-center">{activity?.descAtiv}</p>
                                     </div>
                                     {/* Baixo — botões Edit e Delete */}
-                                    <div className="flex flex-col gap-0 w-[50%] mx-auto mt-auto mb-auto">
-                                        <div className="border-t border-[#B9D9E5] pt-3 mt-2">
-                                            <p className="text-[#5C7E8D] text-sm text-center mb-16">Edit Activity</p>
-                                            <div className="flex justify-center mb-4">
-                                                <button onClick={() => setIsEditing(true)}
-                                                    className="bg-[#9FD7F1] text-white px-6 py-1 rounded-full text-sm">
-                                                    Edit
-                                                </button>
+                                    {!isShared && (
+                                        <div className="flex flex-col gap-0 w-[50%] mx-auto mt-auto mb-auto">
+                                            <div className="border-t border-[#B9D9E5] pt-3 mt-2">
+                                                <p className="text-[#5C7E8D] text-sm text-center mb-16">Edit Activity</p>
+                                                <div className="flex justify-center mb-4">
+                                                    <button onClick={() => setIsEditing(true)}
+                                                        className="bg-[#9FD7F1] text-white px-6 py-1 rounded-full text-sm">
+                                                        Edit
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div className="border-t border-[#B9D9E5] pt-3 mt-2">
+                                                <p className="text-[#5C7E8D] text-sm text-center mb-16">Delete Activity</p>
+                                                <div className="flex justify-center">
+                                                    <button onClick={() => setDeleteModal(true)}
+                                                        className="bg-[#D22D39] text-white px-6 py-1 rounded-full text-sm">
+                                                        Delete
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div className="border-t border-[#B9D9E5] pt-3 mt-2">
-                                            <p className="text-[#5C7E8D] text-sm text-center mb-16">Delete Activity</p>
-                                            <div className="flex justify-center">
-                                                <button onClick={() => setDeleteModal(true)}
-                                                    className="bg-[#D22D39] text-white px-6 py-1 rounded-full text-sm">
-                                                    Delete
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    )}
                                 </div>
                                 {/* Divisor vertical */}
                                 <div className="w-px bg-[#B9D9E5]" />
@@ -282,16 +326,22 @@ function ActivityPage() {
                                                     local={schedule.local}
                                                     frequency={schedule.frequencia}
                                                     compact={true}
-                                                    onCardClick={() => navigate(`/schedule/${schedule.agenId}`)}
-                                                    onDeleteClick={() => setScheduleToDelete(schedule.agenId)}
+                                                    onCardClick={() => {navigate(`/schedule/${schedule.agenId}${isShared ? '?shared=true' : ''}`)}} 
+                                                    onDeleteClick={() => {
+                                                        if (!isShared) {
+                                                            setScheduleToDelete(schedule.agenId)
+                                                        }
+                                                    }}
                                                 />
                                             ))
                                         }
                                     </div>
-                                    <button onClick={() => navigate(`/schedule/new?activity_id=${id}`)}
-                                        className="bg-[#9FD7F1] text-[#5C7E8D] self-center  px-4 py-1 rounded-full w-fit">
-                                        Create Schedule
-                                    </button>
+                                    {!isShared &&(
+                                        <button onClick={() => navigate(`/schedule/new?activity_id=${id}`)}
+                                            className="bg-[#9FD7F1] text-[#5C7E8D] self-center  px-4 py-1 rounded-full w-fit">
+                                            Create Schedule
+                                        </button>
+                                    )}
                                 </div>
                             </div>   
                         </div>

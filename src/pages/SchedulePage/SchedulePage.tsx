@@ -8,7 +8,7 @@ import { listGroups } from "../../services/grupo"
 import Modal from "../../components/modal/modal"
 import {Undo2} from "lucide-react"
 import { searchCep } from "../../services/cep"
-
+import { listSharedActivities } from "../../services/atividade"
 
 function SchedulePage() {
     const [name, setName] = useState('')
@@ -32,28 +32,85 @@ function SchedulePage() {
     const location = useLocation()
     const navigate = useNavigate()
     
-
     const queryParams = new URLSearchParams(location.search)
     const activityId = queryParams.get('activity_id')
+    const isShared = queryParams.get('shared') === 'true'
 
     // busca os agendamentos 
+
     useEffect(() => {
-        const fetchSchedule = async () => {
-            if(id && id !== 'new') {
-                try {
-                    const data =  await displaySchedule(Number(id))
-                    setSchedule(data[0])
-                } catch {
-                    setError ('Error loading schedule.')
-                } finally {
-                    setLoading(false)
+        let cancelled = false;
+
+        async function fetchSchedule() {
+            if (!id || id === "new") {
+                setLoading(false);
+                return;
+            }
+
+            setLoading(true);
+            setError(null);
+            setSchedule(null);
+
+            try {
+                if (isShared) {
+                    const sharedActivities = await listSharedActivities();
+
+                    const sharedActivity = sharedActivities.find(
+                        activity => activity.schedules.some(
+                            schedule => schedule.agenId === Number(id)
+                        )
+                    );
+
+                    if (!sharedActivity) {
+                        throw new Error("Shared schedule not found.");
+                    }
+
+                    const sharedSchedule = sharedActivity.schedules.find(
+                        schedule => schedule.agenId === Number(id)
+                    );
+
+                    if (!sharedSchedule) {
+                        throw new Error("Shared schedule not found.");
+                    }
+
+                    if (!cancelled) {
+                        setSchedule({
+                            ...sharedSchedule,
+                            ativId: sharedActivity.ativId,
+                            nomeAtiv: sharedActivity.nomeAtiv
+                        });
+                    }
+                } else {
+                    const data = await displaySchedule(Number(id));
+
+                    if (!data?.[0]) {
+                        throw new Error("Schedule not found.");
+                    }
+
+                    if (!cancelled) {
+                        setSchedule(data[0]);
+                    }
                 }
-            } else {
-                setLoading(false)
+            } catch (error) {
+                console.error("Error loading schedule:", error);
+
+                if (!cancelled) {
+                    setError("Error loading schedule.");
+                }
+            } finally {
+                if (!cancelled) {
+                    setLoading(false);
+                }
             }
         }
-        fetchSchedule()
-    },[id])
+
+        fetchSchedule();
+
+        return () => {
+            cancelled = true;
+        };
+    }, [id, isShared]);
+
 
     // passa os valores atribuidos ao useStates, eles podem ser valores vazios para não dar conflito com o backend
     useEffect(() => {
@@ -256,7 +313,7 @@ function SchedulePage() {
                 </div>      
         )
 
-        if(isEditing) {
+        if(isEditing && !isShared) {
             return(
                 <div className="flex justify-center px-16 pt-12 gap-4">
                     <div className="bg-[#E1EFF4] rounded-2xl p-8 w-full max-w-[600px] flex flex-col gap-4">
@@ -363,7 +420,7 @@ function SchedulePage() {
                 {/* Botão Return */}
                         <button 
                             title="Return to activity page"
-                            onClick={() => navigate(`/activity/${schedule?.ativId}`)}
+                            onClick={() => navigate(`/activity/${schedule?.ativId}${isShared ? '?shared=true' : ''}`)}
                             className="absolute top-36 flex flex-col items-center text-white gap-1 cursor-pointer z-50"
                             style={{ left: 'calc(12.5% - 50px)' }}>
                             <Undo2 size={36} color="white" />
@@ -383,9 +440,17 @@ function SchedulePage() {
                                 hora_fim={schedule?.hora_fim}
                                 local={schedule?.local}
                                 frequency={schedule?.frequencia}
-                                onEditClick={() => setIsEditing(true)}
-                                showDelete={true}
-                                onDeleteClick={() => setDeleteModal(true)}
+                                onEditClick={
+                                    isShared
+                                        ? undefined
+                                        : () => setIsEditing(true)
+                                }
+                                showDelete={!isShared}
+                                onDeleteClick={
+                                    isShared
+                                        ? undefined
+                                        : () => setDeleteModal(true)
+                                }
                             />
                         </div>
                     </div>
