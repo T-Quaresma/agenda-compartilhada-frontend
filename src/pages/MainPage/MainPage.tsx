@@ -2,7 +2,8 @@ import Header from "../../components/Header/Header"
 import Modal from "../../components/modal/modal"
 import BottomNav from "../../components/BottomNav/BottomNav"
 import { useState, useEffect } from "react"
-import { listActivities } from "../../services/atividade"
+import { listActivities, listSharedActivities } from "../../services/atividade"
+import type { SharedActivity } from "../../services/atividade"
 import { listGroups, createGroup, deleteGroup, updateGroup } from "../../services/grupo"
 import { Plus } from "lucide-react"
 import { useNavigate, useLocation } from "react-router-dom"
@@ -11,6 +12,7 @@ import { logoutUser } from "../../services/auth"
 
 function MainPage() {
     const [activities, setActivities] = useState<any[]>([])
+    const [sharedActivities, setSharedActivities] = useState<SharedActivity[]>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
     const [groups, setGroups] = useState<any[]>([])
@@ -45,6 +47,28 @@ function MainPage() {
         }
         fetchActivities()     
     }, [])
+
+    useEffect(() => {
+        let cancelled = false;
+
+        async function fetchSharedActivities() {
+            try {
+                const data = await listSharedActivities();
+
+                if (!cancelled) {
+                    setSharedActivities(data);
+                }
+            } catch (error) {
+                console.error("Error loading shared activities:", error);
+            }
+        }
+
+        fetchSharedActivities();
+
+        return () => {
+            cancelled = true;
+        };
+    }, []);   
 
     useEffect(() => {
         const fetchGroups = async () => {
@@ -111,6 +135,14 @@ function MainPage() {
     const filteredActivities = activities
         .filter(a => selectedGroupId ? a.grupoId === selectedGroupId : true)
         .filter(a => searchTerm ? a.nomeAtiv.toLowerCase().includes(searchTerm.toLowerCase()) : true)
+
+    const filteredSharedActivities = sharedActivities.filter(activity => {
+        const matchesSearch = activity.nomeAtiv
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase());
+
+        return selectedGroupId === null && matchesSearch;
+    });
 
     return (
         <div className="min-h-screen bg-[#BCE0F3] pb-[160px]">
