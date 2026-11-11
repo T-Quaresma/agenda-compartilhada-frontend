@@ -5,7 +5,7 @@ import { useState, useEffect } from "react"
 import { listActivities, listSharedActivities } from "../../services/atividade"
 import type { SharedActivity } from "../../services/atividade"
 import { listGroups, createGroup, deleteGroup, updateGroup } from "../../services/grupo"
-import { Plus } from "lucide-react"
+import { Plus, UsersRound } from "lucide-react"
 import { useNavigate, useLocation } from "react-router-dom"
 import AvatarPicker from "../../components/AvatarPicker/AvatarPicker"
 import { logoutUser } from "../../services/auth"
@@ -262,6 +262,28 @@ function MainPage() {
                                         : <div className="w-12 h-12 bg-[#87A7B8] rounded-full" />
                                     }
                                 </div>
+                                <p className="text-[#5C7E8D] font-bold text-sm text-center px-2">{activity.nomeAtiv}</p>
+                                <p className="text-[#5C7E8D] text-xs text-center px-2 line-clamp-2">{activity.descAtiv}</p>
+                            </div>
+                        ))}
+
+                        {/* Cards das atividades compartilhadas */}
+                        {filteredSharedActivities.map(activity => (
+                            <div
+                                key={`shared-${activity.ativId}`}
+                                className="bg-[#E1EFF4] rounded-2xl flex flex-col items-center justify-center gap-2 cursor-pointer h-[200px] relative pt-8"
+                                onClick={() => navigate(`/activity/${activity.ativId}?shared=true`)}
+                            >
+                                <div className="absolute -top-6 left-1/2 -translate-x-1/2">
+                                    {activity.imagem
+                                        ? <img src={activity.imagem} alt={activity.nomeAtiv} className="w-12 h-12 rounded-full" />
+                                        : <div className="w-12 h-12 bg-[#87A7B8] rounded-full" />
+                                    }
+                                </div>
+                                <span className="absolute top-2 right-2 inline-flex items-center gap-1 rounded-full bg-[#BCE0F3] px-2 py-1 text-[10px] font-semibold text-[#5C7E8D]">
+                                    <UsersRound size={12} aria-hidden="true" />
+                                    Shared
+                                </span>
                                 <p className="text-[#5C7E8D] font-bold text-sm text-center px-2">{activity.nomeAtiv}</p>
                                 <p className="text-[#5C7E8D] text-xs text-center px-2 line-clamp-2">{activity.descAtiv}</p>
                             </div>
