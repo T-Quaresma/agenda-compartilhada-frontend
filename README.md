@@ -239,9 +239,9 @@ I-------------------------------------------------------------------------------
 
 **Participants**
 
-- Add users as participants to schedules.
-- Display participants associated with a schedule.
-- Remove participants from schedules.
+- Schedule owners can search for users by exact name and send invitations to a schedule.
+- Schedule owners can view participant names and invitation statuses, and remove participants.
+- Invited users can accept or decline pending invitations from the invitations menu.
 
 **CEP Search**
 

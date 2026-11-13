@@ -446,6 +446,7 @@ function SchedulePage() {
                                         : () => setIsEditing(true)
                                 }
                                 showDelete={!isShared}
+                                canManageParticipants={!isShared}
                                 onDeleteClick={
                                     isShared
                                         ? undefined

@@ -1,4 +1,12 @@
-import { Calendar, MapPin, User, Repeat, Trash2 } from "lucide-react"
+import { useEffect, useState, type FormEvent } from "react"
+import { Calendar, MapPin, User, Repeat, Trash2, Search, UserPlus, X } from "lucide-react"
+import {
+    addScheduleParticipant,
+    getScheduleParticipants,
+    removeScheduleParticipant,
+    searchUsersByName
+} from "../../services/participante"
+import type { ScheduleParticipant, UserSearchResult } from "../../services/participante"
 
 type ScheduleProps = {
     nomeAtiv: string
@@ -12,13 +20,172 @@ type ScheduleProps = {
     local: string | null
     frequency: string | null
     showDelete?: boolean
+    canManageParticipants?: boolean
     compact?: boolean
     onEditClick?: () => void
     onDeleteClick?: () => void
     onCardClick?: () => void
 }
 
-function ScheduleCard({ nomeAtiv, nomeAgen, descAgen, data_inicio, data_fim, hora_inicio, hora_fim, local, frequency, compact, onEditClick, onDeleteClick, onCardClick, showDelete = true }: ScheduleProps) {
+type ParticipantData = {
+    scheduleId: number
+    loadVersion: number
+    participants: ScheduleParticipant[]
+    failed?: boolean
+}
+
+function ScheduleCard({ nomeAtiv, agendId, nomeAgen, descAgen, data_inicio, data_fim, hora_inicio, hora_fim, local, frequency, compact, onEditClick, onDeleteClick, onCardClick, showDelete = true, canManageParticipants = true }: ScheduleProps) {
+    const [participantData, setParticipantData] = useState<ParticipantData | null>(null)
+    const [participantActionError, setParticipantActionError] = useState<string | null>(null)
+    const [showAddParticipant, setShowAddParticipant] = useState(false)
+    const [userSearch, setUserSearch] = useState("")
+    const [userSearchResults, setUserSearchResults] = useState<UserSearchResult[]>([])
+    const [hasSearchedUsers, setHasSearchedUsers] = useState(false)
+    const [userSearchLoading, setUserSearchLoading] = useState(false)
+    const [userSearchError, setUserSearchError] = useState<string | null>(null)
+    const [addingUserId, setAddingUserId] = useState<number | null>(null)
+    const [removingParticipantId, setRemovingParticipantId] = useState<number | null>(null)
+    const [participantReloadVersion, setParticipantReloadVersion] = useState(0)
+    const participants = participantData?.scheduleId === agendId
+        ? participantData.participants
+        : []
+    const participantsLoading = canManageParticipants
+        && !compact
+        && Boolean(agendId)
+        && (participantData?.scheduleId !== agendId
+            || participantData.loadVersion !== participantReloadVersion)
+    const participantsError = participantActionError
+        ?? (participantData?.scheduleId === agendId
+            && participantData.loadVersion === participantReloadVersion
+            && participantData.failed
+            ? "Could not load participants."
+            : null)
+
+    useEffect(() => {
+        let cancelled = false
+
+        if (compact || !canManageParticipants || !agendId) return
+
+        async function loadParticipants() {
+            try {
+                const data = await getScheduleParticipants(agendId)
+                if (!cancelled) {
+                    setParticipantData({
+                        scheduleId: agendId,
+                        loadVersion: participantReloadVersion,
+                        participants: data
+                    })
+                }
+            } catch (error) {
+                console.error("Error loading schedule participants:", error)
+                if (!cancelled) {
+                    setParticipantData({
+                        scheduleId: agendId,
+                        loadVersion: participantReloadVersion,
+                        participants: [],
+                        failed: true
+                    })
+                }
+            }
+        }
+
+        loadParticipants()
+
+        return () => {
+            cancelled = true
+        }
+    }, [agendId, canManageParticipants, compact, participantReloadVersion])
+
+    async function handleUserSearch(event: FormEvent<HTMLFormElement>) {
+        event.preventDefault()
+        const name = userSearch.trim()
+        setUserSearchError(null)
+        setUserSearchResults([])
+
+        if (!name) {
+            setHasSearchedUsers(false)
+            setUserSearchError("Enter the user's exact name to search.")
+            return
+        }
+
+        setHasSearchedUsers(true)
+        setUserSearchLoading(true)
+        try {
+            setUserSearchResults(await searchUsersByName(name))
+        } catch (error) {
+            console.error("Error searching users:", error)
+            setUserSearchError("Could not search users.")
+        } finally {
+            setUserSearchLoading(false)
+        }
+    }
+
+    async function handleAddParticipant(user: UserSearchResult) {
+        setAddingUserId(user.usuId)
+        setUserSearchError(null)
+
+        try {
+            const result = await addScheduleParticipant(user.usuId, agendId)
+            setParticipantData(previous => previous?.scheduleId === agendId
+                ? {
+                    ...previous,
+                    failed: false,
+                    participants: previous.participants.some(
+                        participant => participant.partId === result.partId
+                    )
+                        ? previous.participants
+                        : [
+                            ...previous.participants,
+                            {
+                                partId: result.partId,
+                                usuId: user.usuId,
+                                nomeUsu: user.nomeUsu,
+                                status: result.status
+                            }
+                        ]
+                }
+                : {
+                    scheduleId: agendId,
+                    loadVersion: participantReloadVersion,
+                    participants: [{
+                        partId: result.partId,
+                        usuId: user.usuId,
+                        nomeUsu: user.nomeUsu,
+                        status: result.status
+                    }]
+                })
+            setShowAddParticipant(false)
+            setUserSearch("")
+            setUserSearchResults([])
+        } catch (error) {
+            console.error("Error adding schedule participant:", error)
+            setUserSearchError("Could not send invitation. Please try again.")
+        } finally {
+            setAddingUserId(null)
+        }
+    }
+
+    async function handleRemoveParticipant(participantId: number) {
+        setRemovingParticipantId(participantId)
+        setParticipantActionError(null)
+
+        try {
+            await removeScheduleParticipant(participantId)
+            setParticipantData(previous => previous?.scheduleId === agendId
+                ? {
+                    ...previous,
+                    participants: previous.participants.filter(
+                        participant => participant.partId !== participantId
+                    )
+                }
+                : previous)
+        } catch (error) {
+            console.error("Error removing schedule participant:", error)
+            setParticipantActionError("Could not remove participant.")
+        } finally {
+            setRemovingParticipantId(null)
+        }
+    }
     
     // Formata data: "Wed, 15 Jul 2026 00:00:00 GMT" → "Wed, 15 Jul 2026"
     const formatDate = (dateStr: string | null) => {
@@ -115,7 +282,9 @@ function ScheduleCard({ nomeAtiv, nomeAgen, descAgen, data_inicio, data_fim, hor
                             )}
                             <div className="flex items-center gap-2">
                                 <User size={24} color="#26A5FF" />
-                                <p className="text-white text-[0.9vw] font-semibold">* Participants</p>
+                                <p className="text-white text-[0.9vw] font-semibold">
+                                    {participants.filter(participant => participant.status === "accepted").length} Participants
+                                </p>
                             </div>
                             <div className="flex items-center gap-2">
                                 <div className="w-4 h-4 bg-[#87A7B8] rounded-full shrink-0" />
@@ -156,11 +325,161 @@ function ScheduleCard({ nomeAtiv, nomeAgen, descAgen, data_inicio, data_fim, hor
                 {/* Coluna direita — Participantes */}
                 <div className="flex flex-col flex-1 gap-3 rounded-xl p-4 min-w-0">
                     <h2 className="text-[#5C7E8D] text-[2.0vw] text-center">Participants</h2>
-                    <div className="flex flex-col gap-2 overflow-y-auto flex-1">
-                        <p className="text-[#5C7E8D] text-sm text-center mt-4">Under Construction</p>
+                    {participantsError && (
+                        <p role="alert" className="text-red-600 text-sm text-center">{participantsError}</p>
+                    )}
+                    <div className="flex flex-col gap-2 overflow-y-auto flex-1 min-h-0">
+                        {participantsLoading ? (
+                            <p role="status" className="text-[#5C7E8D] text-sm text-center mt-4">
+                                Loading participants...
+                            </p>
+                        ) : !canManageParticipants ? (
+                            <p className="text-[#5C7E8D] text-sm text-center mt-4">
+                                Participants are only visible to the schedule owner.
+                            </p>
+                        ) : participantData?.scheduleId === agendId && participantData.failed ? (
+                            <button
+                                type="button"
+                                onClick={() => setParticipantReloadVersion(version => version + 1)}
+                                className="text-[#5C7E8D] text-sm text-center mt-4 underline"
+                            >
+                                Could not load participants. Try again.
+                            </button>
+                        ) : participants.length === 0 ? (
+                            <p className="text-[#5C7E8D] text-sm text-center mt-4">
+                                No participants yet.
+                            </p>
+                        ) : (
+                            participants.map(participant => (
+                                <div
+                                    key={participant.partId}
+                                    className="flex items-center gap-2 min-h-10"
+                                >
+                                    <div className="w-7 h-7 rounded-full bg-[#87A7B8] flex items-center justify-center text-white text-xs font-semibold shrink-0">
+                                        {participant.nomeUsu.charAt(0).toUpperCase()}
+                                    </div>
+                                    <span className="text-white text-sm truncate flex-1">
+                                        {participant.nomeUsu}
+                                    </span>
+                                    <span className="text-[#5C7E8D] text-xs capitalize">
+                                        {participant.status}
+                                    </span>
+                                    <button
+                                        type="button"
+                                        aria-label={`Remove ${participant.nomeUsu}`}
+                                        disabled={removingParticipantId !== null}
+                                        onClick={() => handleRemoveParticipant(participant.partId)}
+                                        className="p-1 text-[#26A5FF] hover:text-red-600 disabled:opacity-50"
+                                    >
+                                        <Trash2 size={16} />
+                                    </button>
+                                </div>
+                            ))
+                        )}
                     </div>
+                    {canManageParticipants && (
+                        <button
+                            type="button"
+                            disabled={participantsLoading}
+                            onClick={() => {
+                                setUserSearchError(null)
+                                setUserSearch("")
+                                setUserSearchResults([])
+                                setHasSearchedUsers(false)
+                                setShowAddParticipant(true)
+                            }}
+                            className="self-center bg-[#9FD7F1] text-[#5C7E8D] px-5 py-2 rounded-full text-sm font-semibold disabled:opacity-50"
+                        >
+                            Add Participant
+                        </button>
+                    )}
                 </div>
             </div>
+            {showAddParticipant && (
+                <div
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+                    onClick={() => setShowAddParticipant(false)}
+                >
+                    <section
+                        role="dialog"
+                        aria-modal="true"
+                        aria-labelledby="add-participant-title"
+                        className="w-full max-w-md rounded-2xl bg-[#E1EFF4] p-6 shadow-xl"
+                        onClick={event => event.stopPropagation()}
+                    >
+                        <div className="flex items-center justify-between gap-4 mb-4">
+                            <h2 id="add-participant-title" className="text-[#5C7E8D] text-xl font-bold">
+                                Add Participant
+                            </h2>
+                            <button
+                                type="button"
+                                aria-label="Close"
+                                onClick={() => setShowAddParticipant(false)}
+                                className="text-[#5C7E8D]"
+                            >
+                                <X size={20} />
+                            </button>
+                        </div>
+                        <p className="text-[#5C7E8D] text-sm mb-3">
+                            Search by the user's exact name. They will receive an invitation to this schedule.
+                        </p>
+                        <form onSubmit={handleUserSearch} className="flex gap-2">
+                            <input
+                                autoFocus
+                                type="search"
+                                value={userSearch}
+                                onChange={event => {
+                                    setUserSearch(event.target.value)
+                                    setUserSearchResults([])
+                                    setHasSearchedUsers(false)
+                                }}
+                                aria-label="User's exact name"
+                                placeholder="User's exact name"
+                                className="min-w-0 flex-1 rounded-lg border border-[#B9D9E5] bg-white px-3 py-2 text-[#5C7E8D] outline-none"
+                            />
+                            <button
+                                type="submit"
+                                disabled={userSearchLoading}
+                                className="flex items-center gap-2 rounded-lg bg-[#5ca6db] px-4 py-2 text-white disabled:opacity-50"
+                            >
+                                <Search size={16} />
+                                Search
+                            </button>
+                        </form>
+                        {userSearchError && (
+                            <p role="alert" className="mt-3 text-sm text-red-600">{userSearchError}</p>
+                        )}
+                        {userSearchLoading && (
+                            <p role="status" className="mt-3 text-sm text-[#5C7E8D]">Searching...</p>
+                        )}
+                        {!userSearchLoading && hasSearchedUsers && userSearchResults.length === 0 && !userSearchError && (
+                            <p className="mt-3 text-sm text-[#5C7E8D]">No users found. Check the exact name and try again.</p>
+                        )}
+                        <div className="mt-3 flex max-h-56 flex-col gap-2 overflow-y-auto">
+                            {userSearchResults.map(user => (
+                                <div
+                                    key={user.usuId}
+                                    className="flex items-center gap-3 rounded-lg bg-white p-3"
+                                >
+                                    <div className="w-8 h-8 rounded-full bg-[#87A7B8] flex items-center justify-center text-white text-sm font-semibold shrink-0">
+                                        {user.nomeUsu.charAt(0).toUpperCase()}
+                                    </div>
+                                    <span className="text-[#5C7E8D] text-sm flex-1">{user.nomeUsu}</span>
+                                    <button
+                                        type="button"
+                                        disabled={addingUserId !== null}
+                                        onClick={() => handleAddParticipant(user)}
+                                        className="flex items-center gap-1 rounded-full bg-[#9FD7F1] px-3 py-1 text-sm font-semibold text-[#5C7E8D] disabled:opacity-50"
+                                    >
+                                        <UserPlus size={15} />
+                                        Invite
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                </div>
+            )}
         </div>
     )
 }
